@@ -121,6 +121,8 @@ MEDIASCRIBE_LLM_API_BASE=http://localhost:11434
 # Azure ASR
 AZURE_SPEECH_KEY=xxx
 AZURE_SPEECH_REGION=westus2
+# If you pass `-l/--language` with Azure, use a supported locale such as
+# `zh-CN` or `en-US`, not short codes like `zh` or `en`.
 
 # Optional cloud summary keys
 # ANTHROPIC_API_KEY=sk-xxx
@@ -171,6 +173,8 @@ uv run python scripts/manual_check_ollama_summary.py
 ```bash
 uv run mediascribe ".\meeting.wav" --asr azure
 ```
+
+Azure note: if you set `-l/--language`, use a full locale such as `zh-CN` or `en-US`.
 
 ### Audio: transcript only
 

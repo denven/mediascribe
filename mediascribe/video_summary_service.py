@@ -214,7 +214,7 @@ def build_parser() -> argparse.ArgumentParser:
         "-l",
         "--language",
         default=None,
-        help="Audio language code for the ASR fallback path.",
+        help="Audio language locale (BCP-47) for the ASR fallback path, e.g. 'zh-CN', 'en-US'.",
     )
     parser.add_argument(
         "--speaker-name",

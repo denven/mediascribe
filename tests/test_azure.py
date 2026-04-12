@@ -80,6 +80,77 @@ def test_transcribe_surfaces_azure_error_details(
             provider.transcribe(audio_path)
 
 
+def test_transcribe_invalid_locale_error_suggests_supported_locales(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    provider = AzureASRProvider(
+        AzureASRConfig(
+            key="test-key",
+            region="westus2",
+            language="zh",
+        )
+    )
+
+    response = requests.Response()
+    response.status_code = 400
+    response._content = (
+        b'{"code":"InvalidArgument","message":"The specified locale is not supported.",'
+        b'"innerError":{"code":"InvalidLocale","message":"The specified locale is not supported."}}'
+    )
+    response.url = "https://example.test/transcriptions:transcribe"
+    response.request = requests.Request("POST", response.url).prepare()
+
+    def fake_post(*args, **kwargs):
+        return response
+
+    monkeypatch.setattr("mediascribe.asr.providers.cloud.azure.requests.post", fake_post)
+
+    audio_path = tmp_path / "sample.wav"
+    audio_path.write_bytes(b"wav-data")
+
+    with pytest.raises(
+        requests.HTTPError,
+        match="zh-CN.*en-US.*language-support\\?tabs=stt",
+    ):
+        provider.transcribe(audio_path)
+
+
+def test_transcribe_other_400_errors_do_not_assume_invalid_locale(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    provider = AzureASRProvider(
+        AzureASRConfig(
+            key="test-key",
+            region="westus2",
+            language="en-US",
+        )
+    )
+
+    response = requests.Response()
+    response.status_code = 400
+    response._content = (
+        b'{"code":"InvalidArgument","message":"The request payload is invalid."}'
+    )
+    response.url = "https://example.test/transcriptions:transcribe"
+    response.request = requests.Request("POST", response.url).prepare()
+
+    def fake_post(*args, **kwargs):
+        return response
+
+    monkeypatch.setattr("mediascribe.asr.providers.cloud.azure.requests.post", fake_post)
+
+    audio_path = tmp_path / "sample.wav"
+    audio_path.write_bytes(b"wav-data")
+
+    with pytest.raises(requests.HTTPError) as exc_info:
+        provider.transcribe(audio_path)
+
+    assert "The request payload is invalid." in str(exc_info.value)
+    assert "zh-CN" not in str(exc_info.value)
+
+
 def test_transcribe_normalizes_non_wav_audio_before_upload(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

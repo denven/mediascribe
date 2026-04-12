@@ -64,6 +64,8 @@ Notes:
 uv run mediascribe ".\meeting.wav" --asr azure
 ```
 
+Azure note: if you set `-l/--language`, use a full locale such as `zh-CN` or `en-US`.
+
 ### Audio -> transcript only
 
 ```bash

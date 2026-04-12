@@ -64,7 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-l", "--language",
         default=None,
-        help="Audio language code, e.g. 'zh', 'en'. Auto-detect if omitted.",
+        help="Audio language locale (BCP-47), e.g. 'zh-CN', 'en-US'. Auto-detect if omitted.",
     )
     parser.add_argument(
         "--speaker-name",

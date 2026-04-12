@@ -134,6 +134,16 @@ config = build_provider_config("azure", language="en-US")
 
 Internally this delegates to the registered provider-specific resolver, so adding a new provider does not require editing the orchestration layer.
 
+## Azure locale note
+
+When you pass `language=` in Python or `-l/--language` in the CLI with `--asr azure`, use a supported Azure Speech locale in BCP-47 form, such as `zh-CN`, `en-US`, `ja-JP`, or `fr-FR`.
+
+Do not use short language codes such as `zh` or `en` for Azure fast transcription. Azure can reject them with `InvalidLocale`.
+
+Official locale reference:
+
+- Azure Speech language support (Speech to text / fast transcription locales): https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=stt
+
 ## How to add a new ASR provider
 
 1. Add a config dataclass in `mediascribe/asr/config.py`

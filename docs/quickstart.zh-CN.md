@@ -64,6 +64,8 @@ AZURE_SPEECH_REGION=westus2
 uv run mediascribe ".\meeting.wav" --asr azure
 ```
 
+Azure 提示：如果你设置 `-l/--language`，请使用 `zh-CN`、`en-US` 这样的完整 locale。
+
 ### 音频 -> 仅转写
 
 ```bash

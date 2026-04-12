@@ -31,6 +31,14 @@ _DECODE_ERROR_MARKERS = (
 _AUTO_SPLIT_DURATION_SECONDS = 60 * 60
 _AUTO_SPLIT_SIZE_BYTES = 150 * 1024 * 1024
 _AUTO_SPLIT_CHUNK_SECONDS = 30 * 60
+_AZURE_LOCALE_GUIDE_URL = (
+    "https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=stt"
+)
+_INVALID_LOCALE_MARKERS = (
+    "invalidlocale",
+    "locale is not supported",
+    "specified locale is not supported",
+)
 
 
 class AzureASRProvider:
@@ -117,6 +125,7 @@ class AzureASRProvider:
             resp.raise_for_status()
         except requests.HTTPError as exc:
             detail = self._extract_error_detail(resp)
+            detail = self._augment_error_detail(resp, detail)
             if detail:
                 raise requests.HTTPError(
                     f"{exc}. Azure details: {detail}",
@@ -223,22 +232,72 @@ class AzureASRProvider:
         return definition
 
     @staticmethod
+    def _augment_error_detail(resp: requests.Response, detail: str) -> str:
+        if AzureASRProvider._is_invalid_locale_error(resp):
+            return (
+                f"{detail} Azure Speech expects a supported BCP-47 locale such as "
+                f"zh-CN, en-US, ja-JP, or fr-FR. Reference: {_AZURE_LOCALE_GUIDE_URL}"
+            )
+        return detail
+
+    @staticmethod
     def _extract_error_detail(resp: requests.Response) -> str:
+        payload = AzureASRProvider._extract_error_payload(resp)
+        if payload is None:
+            return resp.text.strip()
+
+        candidates = (
+            payload.get("message"),
+            AzureASRProvider._nested_str(payload.get("error"), "message"),
+            AzureASRProvider._nested_str(payload.get("innerError"), "message"),
+            AzureASRProvider._nested_str(payload.get("error"), "code"),
+            AzureASRProvider._nested_str(payload.get("innerError"), "code"),
+            payload.get("details"),
+        )
+        for value in candidates:
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+
+        return json.dumps(payload, ensure_ascii=True)
+
+    @staticmethod
+    def _is_invalid_locale_error(resp: requests.Response) -> bool:
+        payload = AzureASRProvider._extract_error_payload(resp)
+        if payload is not None:
+            candidates = (
+                payload.get("code"),
+                payload.get("message"),
+                AzureASRProvider._nested_str(payload.get("error"), "code"),
+                AzureASRProvider._nested_str(payload.get("error"), "message"),
+                AzureASRProvider._nested_str(payload.get("innerError"), "code"),
+                AzureASRProvider._nested_str(payload.get("innerError"), "message"),
+            )
+            for value in candidates:
+                if isinstance(value, str) and any(
+                    marker in value.lower() for marker in _INVALID_LOCALE_MARKERS
+                ):
+                    return True
+
+        response_text = resp.text.strip().lower()
+        return any(marker in response_text for marker in _INVALID_LOCALE_MARKERS)
+
+    @staticmethod
+    def _extract_error_payload(resp: requests.Response) -> dict | None:
         try:
             payload = resp.json()
         except ValueError:
-            return resp.text.strip()
+            return None
+        if isinstance(payload, dict):
+            return payload
+        return None
 
-        for key in ("message", "error", "details"):
-            value = payload.get(key)
-            if isinstance(value, str) and value.strip():
-                return value.strip()
-            if isinstance(value, dict):
-                nested = value.get("message") or value.get("code")
-                if isinstance(nested, str) and nested.strip():
-                    return nested.strip()
-
-        return json.dumps(payload, ensure_ascii=True)
+    @staticmethod
+    def _nested_str(value: object, key: str) -> str | None:
+        if isinstance(value, dict):
+            nested = value.get(key)
+            if isinstance(nested, str) and nested.strip():
+                return nested.strip()
+        return None
 
     @staticmethod
     def _parse_result(result: dict) -> list[TranscribedSegment]:
