@@ -68,7 +68,17 @@ def test_resolve_summary_api_base_prefers_explicit_then_env(monkeypatch: pytest.
 
     assert resolve_summary_api_base("ollama/qwen2.5:3b", "http://localhost:11434") == "http://localhost:11434"
     assert resolve_summary_api_base("ollama/qwen2.5:3b") == "http://127.0.0.1:22434"
-    assert resolve_summary_api_base("gpt-5.4-mini") == "http://127.0.0.1:22434"
+    assert resolve_summary_api_base("gpt-5.4-mini") is None
+
+
+def test_resolve_summary_api_base_does_not_apply_ollama_env_base_to_openai_models(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MEDIASCRIBE_LLM_API_BASE", "http://localhost:11434")
+    monkeypatch.setenv("OLLAMA_API_BASE", "http://127.0.0.1:22434")
+    monkeypatch.setenv("OLLAMA_HOST", "http://127.0.0.1:33434")
+
+    assert resolve_summary_api_base("gpt-5-mini") is None
 
 
 def test_summarize_text_sources_returns_model_and_content(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -9,6 +9,17 @@ _LITELLM_NOISE_MARKERS = (
     "/api/generate/api/show",
 )
 _LITELLM_LOGGERS = ("LiteLLM", "LiteLLM Proxy", "LiteLLM Router")
+_THIRD_PARTY_LOGGERS = (
+    "LiteLLM",
+    "LiteLLM Proxy",
+    "LiteLLM Router",
+    "openai",
+    "httpcore",
+    "httpx",
+    "urllib3",
+    "asyncio",
+)
+_THIRD_PARTY_DEBUG_ENV = "MEDIASCRIBE_DEBUG_THIRD_PARTY"
 
 
 class _LiteLLMNoiseFilter(logging.Filter):
@@ -17,6 +28,10 @@ class _LiteLLMNoiseFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         message = record.getMessage()
         return not any(marker in message for marker in _LITELLM_NOISE_MARKERS)
+
+
+def _is_truthy_env(env_var: str) -> bool:
+    return os.environ.get(env_var, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
 def load_environment(env_path: Path | None = None) -> None:
@@ -58,11 +73,20 @@ def _install_external_log_filters() -> None:
         logger._mediascribe_noise_filter_installed = True
 
 
+def _configure_logger_levels(verbose: bool) -> None:
+    """Keep MediaScribe verbose logs useful without flooding output with client internals."""
+    logging.getLogger("mediascribe").setLevel(logging.DEBUG if verbose else logging.INFO)
+
+    third_party_level = logging.DEBUG if (verbose and _is_truthy_env(_THIRD_PARTY_DEBUG_ENV)) else logging.WARNING
+    for logger_name in _THIRD_PARTY_LOGGERS:
+        logging.getLogger(logger_name).setLevel(third_party_level)
+
+
 def setup_logging(verbose: bool) -> None:
-    level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
-        level=level,
+        level=logging.WARNING,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         datefmt="%H:%M:%S",
     )
     _install_external_log_filters()
+    _configure_logger_levels(verbose)

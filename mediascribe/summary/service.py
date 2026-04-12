@@ -81,6 +81,8 @@ def write_summary_document(
 ) -> Path:
     """Persist a summary result as a Markdown document and return its path."""
 
+    logger.debug("Preparing to write summary document into %s", output_dir)
+
     reference_block = ""
     if summary_result.source_references:
         reference_lines = "\n".join(f"- {reference}" for reference in summary_result.source_references)
@@ -98,6 +100,7 @@ def write_summary_document(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / output_filename
     output_path.write_text(header + summary_result.content, encoding="utf-8")
+    logger.debug("Summary document write completed: %s", output_path)
     logger.info("Summary written: %s", output_path)
 
     return output_path

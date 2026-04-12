@@ -2,7 +2,12 @@
 
 import logging
 
-from mediascribe.runtime import _LiteLLMNoiseFilter
+from mediascribe.runtime import (
+    _LiteLLMNoiseFilter,
+    _THIRD_PARTY_DEBUG_ENV,
+    _configure_logger_levels,
+    _is_truthy_env,
+)
 
 
 def test_litellm_noise_filter_blocks_known_model_cost_warning() -> None:
@@ -45,3 +50,34 @@ def test_litellm_noise_filter_keeps_other_messages() -> None:
     )
 
     assert _LiteLLMNoiseFilter().filter(record) is True
+
+
+def test_is_truthy_env_understands_common_true_values(monkeypatch) -> None:
+    monkeypatch.setenv(_THIRD_PARTY_DEBUG_ENV, "true")
+
+    assert _is_truthy_env(_THIRD_PARTY_DEBUG_ENV) is True
+
+
+def test_is_truthy_env_defaults_to_false(monkeypatch) -> None:
+    monkeypatch.delenv(_THIRD_PARTY_DEBUG_ENV, raising=False)
+
+    assert _is_truthy_env(_THIRD_PARTY_DEBUG_ENV) is False
+
+
+def test_configure_logger_levels_keeps_third_party_debug_hidden_by_default(monkeypatch) -> None:
+    monkeypatch.delenv(_THIRD_PARTY_DEBUG_ENV, raising=False)
+
+    _configure_logger_levels(verbose=True)
+
+    assert logging.getLogger("mediascribe").level == logging.DEBUG
+    assert logging.getLogger("openai").level == logging.WARNING
+    assert logging.getLogger("httpcore").level == logging.WARNING
+
+
+def test_configure_logger_levels_allows_third_party_debug_when_opted_in(monkeypatch) -> None:
+    monkeypatch.setenv(_THIRD_PARTY_DEBUG_ENV, "1")
+
+    _configure_logger_levels(verbose=True)
+
+    assert logging.getLogger("openai").level == logging.DEBUG
+    assert logging.getLogger("httpcore").level == logging.DEBUG

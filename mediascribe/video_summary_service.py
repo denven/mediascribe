@@ -121,6 +121,7 @@ def summarize_video_input(
             summary_title="Video Summary",
             source_references=[_video_source_reference(video_input)],
         )
+        logger.debug("Video summary pipeline completed with ASR-backed summary: %s", summary_path)
         return VideoSummaryResult(
             summary_path=summary_path,
             strategy_used="audio_asr",

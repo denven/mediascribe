@@ -30,6 +30,12 @@ class LitellmSummaryProvider:
         combined = "\n\n---\n\n".join(source.content for source in text_sources)
         source_names = [source.name for source in text_sources]
         source_references = [source.reference for source in text_sources if source.reference]
+        total_characters = len(combined)
+        logger.info(
+            "Summary request prepared: %d source(s), %d character(s) of transcript text",
+            len(text_sources),
+            total_characters,
+        )
         user_prompt = SUMMARY_USER_PROMPT_TEMPLATE.format(transcripts=combined)
         completion_kwargs = {
             "model": self._llm_model,
@@ -42,7 +48,17 @@ class LitellmSummaryProvider:
             completion_kwargs["api_base"] = self._api_base
 
         try:
+            logger.info(
+                "Summary request in progress: waiting for provider response from model %s",
+                self._llm_model,
+            )
+            logger.debug(
+                "Starting LiteLLM completion for model=%s api_base=%s",
+                self._llm_model,
+                self._api_base,
+            )
             response = litellm.completion(**completion_kwargs)
+            logger.debug("LiteLLM completion returned for model=%s", self._llm_model)
             summary_content = response.choices[0].message.content
         except Exception as e:
             raise RuntimeError(f"LLM API call failed ({self._llm_model}): {e}") from e

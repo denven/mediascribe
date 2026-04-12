@@ -10,6 +10,10 @@ def _get_env_value(env_var: str) -> str:
     return os.environ.get(env_var, "").strip()
 
 
+def _uses_ollama_api_base(llm_model: str) -> bool:
+    return llm_model.strip().lower().startswith("ollama/")
+
+
 def required_api_key_for_model(llm_model: str) -> str | None:
     model = llm_model.strip().lower()
     provider_prefixes = (
@@ -58,12 +62,12 @@ def resolve_summary_api_base(
     if llm_api_base:
         return llm_api_base
 
-    for env_var in ("MEDIASCRIBE_LLM_API_BASE", "OLLAMA_API_BASE", "OLLAMA_HOST"):
-        env_value = _get_env_value(env_var)
-        if env_value:
-            return env_value
+    if _uses_ollama_api_base(llm_model):
+        for env_var in ("MEDIASCRIBE_LLM_API_BASE", "OLLAMA_API_BASE", "OLLAMA_HOST"):
+            env_value = _get_env_value(env_var)
+            if env_value:
+                return env_value
 
-    if llm_model.strip().lower().startswith("ollama/"):
         return DEFAULT_LLM_API_BASE
 
     return None
