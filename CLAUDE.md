@@ -17,7 +17,7 @@ Preferred CLI commands:
 
 - **Local ASR**: `faster-whisper` + `pyannote.audio`
 - **Cloud ASR**: Azure Speech / Aliyun / iFlytek through a shared provider interface
-- **LLM Summary**: `litellm`
+- **LLM Summary**: `litellm` routing to local Ollama models or cloud LLM APIs
 - **Video support**: `yt-dlp` + `ffmpeg`
 - **CLI**: `argparse`
 - **Python**: >= 3.10
@@ -34,7 +34,17 @@ Dependencies are split into layers (see `pyproject.toml`):
 - Local (`uv sync --extra local`): `faster-whisper` + `pyannote.audio` + PyTorch
 - Dev (`uv sync --extra dev`): `pytest`
 
-Local ASR prerequisites: `ffmpeg` >= 4.4 in `PATH`, plus `HF_TOKEN` for `pyannote.audio`.
+Runtime prerequisites that are not installed by `uv sync`:
+- Local ASR: `ffmpeg` >= 4.4 in `PATH`, plus `HF_TOKEN` for `pyannote.audio`
+- Local LLM summary: Ollama installed separately, Ollama running on `http://localhost:11434`, and a local model pulled (default: `qwen2.5:3b`)
+
+Typical local summary setup:
+
+```bash
+ollama pull qwen2.5:3b
+# If Ollama is not already running in the background:
+ollama serve
+```
 
 ## Running
 
@@ -50,6 +60,9 @@ uv run mediascribe-transcriber ./recordings --asr azure -o ./output
 
 # Text: summarize existing notes or transcripts
 uv run mediascribe-text ./notes
+
+# Text: summarize with the default local Ollama model
+uv run mediascribe-text ./notes --llm-model ollama/qwen2.5:3b --llm-api-base http://localhost:11434
 
 # Video: subtitle-first summary
 uv run mediascribe video "https://www.youtube.com/watch?v=aircAruvnKk"

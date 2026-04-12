@@ -26,10 +26,12 @@ uv sync --extra local
 uv sync --extra local --extra video
 ```
 
-如果要使用本地总结模型，先安装 Ollama，并拉取默认模型：
+如果要使用本地总结模型，先安装 Ollama，确认服务正在运行，再拉取默认模型：
 
 ```bash
 ollama pull qwen2.5:3b
+# 如果 Ollama 没有在后台运行：
+ollama serve
 ```
 
 ## 2. 最小 `.env`

@@ -26,10 +26,12 @@ uv sync --extra local
 uv sync --extra local --extra video
 ```
 
-For local summary generation, install Ollama and pull the default model:
+For local summary generation, install Ollama, make sure it is running, and pull the default model:
 
 ```bash
 ollama pull qwen2.5:3b
+# If Ollama is not already running in the background:
+ollama serve
 ```
 
 ## 2. Minimal `.env`

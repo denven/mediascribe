@@ -80,10 +80,12 @@ Create the environment
 uv venv --python 3.11
 ```
 
-For local summary generation, install Ollama and pull the default model:
+For local summary generation, install Ollama, make sure it is running, and pull the default model:
 
 ```bash
 ollama pull qwen2.5:3b
+# If Ollama is not already running in the background:
+ollama serve
 ```
 
 Install by scenario

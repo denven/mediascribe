@@ -34,6 +34,23 @@ Responsibilities:
 
 - `litellm`: `mediascribe/summary/providers/litellm_provider.py`
 
+## Local summary prerequisites
+
+The default local summary path is Ollama-backed, so the Python package install is not enough by itself.
+
+- install the Python dependencies with `uv sync`
+- install Ollama separately on the machine
+- make sure Ollama is running on `http://localhost:11434`
+- pull at least one local model, for example `qwen2.5:3b`
+
+Typical setup:
+
+```bash
+ollama pull qwen2.5:3b
+# If Ollama is not already running in the background:
+ollama serve
+```
+
 ## High-level Python APIs
 
 ### Summarize existing transcript or text files

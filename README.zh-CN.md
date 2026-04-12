@@ -80,10 +80,12 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv --python 3.11
 ```
 
-如果要本地做文本总结，先安装 Ollama，并拉取默认模型：
+如果要本地做文本总结，先安装 Ollama，确认服务正在运行，再拉取默认模型：
 
 ```bash
 ollama pull qwen2.5:3b
+# 如果 Ollama 没有在后台运行：
+ollama serve
 ```
 
 按场景安装依赖：
