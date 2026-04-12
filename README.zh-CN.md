@@ -115,6 +115,8 @@ HF_TOKEN=hf_xxx
 
 # 本地总结模型（Ollama）
 # 这两个值同时也是内置默认值。
+# `MEDIASCRIBE_LLM_API_BASE` 主要给本地 / `ollama/...` 模型使用。
+# 像 `gpt-5-mini` 这样的云端模型应使用各自服务商的默认端点。
 MEDIASCRIBE_LLM_MODEL=ollama/qwen2.5:3b
 MEDIASCRIBE_LLM_API_BASE=http://localhost:11434
 
@@ -159,11 +161,25 @@ uv run mediascribe-text .\notes --llm-model ollama/qwen2.5:3b --llm-api-base htt
 ```
 
 如果你想改用云端模型，可以传 `--llm-model`，并在 `.env` 中提供对应的 API key。
+`MEDIASCRIBE_LLM_API_BASE` 适合 Ollama 这类本地 / 自定义端点，不建议指向 `gpt-5-mini` 这类云端模型。
 
 手动联调验证命令：
 
 ```bash
 uv run python scripts/manual_check_ollama_summary.py
+```
+
+## Verbose 日志
+
+- `-v` 会开启 MediaScribe 自己的调试日志
+- `openai`、`httpcore`、`httpx`、`urllib3`、`LiteLLM` 这类底层第三方调试日志默认隐藏
+- 如果你确实要排查底层网络请求，可显式设置 `MEDIASCRIBE_DEBUG_THIRD_PARTY=1`
+
+示例：
+
+```powershell
+$env:MEDIASCRIBE_DEBUG_THIRD_PARTY='1'
+uv run mediascribe ".\meeting.wav" --asr azure -l en-US -v
 ```
 
 ## 快速开始

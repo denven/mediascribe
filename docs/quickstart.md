@@ -39,6 +39,7 @@ ollama serve
 ```env
 HF_TOKEN=hf_xxx
 MEDIASCRIBE_LLM_MODEL=ollama/qwen2.5:3b
+# For local / `ollama/...` summary models only.
 MEDIASCRIBE_LLM_API_BASE=http://localhost:11434
 AZURE_SPEECH_KEY=xxx
 AZURE_SPEECH_REGION=westus2
@@ -49,6 +50,7 @@ Notes:
 - MediaScribe defaults to the local Ollama summary model `ollama/qwen2.5:3b`
 - If you only want transcripts, use `--no-summary`
 - If you want a cloud model instead, pass `--llm-model` and set the matching API key in `.env`
+- `MEDIASCRIBE_LLM_API_BASE` is for local / custom endpoints such as Ollama, not cloud models like `gpt-5-mini`
 
 ## 3. Preferred Commands
 
@@ -155,11 +157,16 @@ Inspect auth resolution:
 uv run mediascribe doctor-video-auth "https://www.bilibili.com/video/BV1VtcYzTEZn/"
 ```
 
-## 8. License
+## 8. Verbose Logging
+
+- `-v` shows MediaScribe debug logs without flooding output with raw third-party HTTP traces
+- To include `openai` / `httpcore` / `LiteLLM` internals too, set `MEDIASCRIBE_DEBUG_THIRD_PARTY=1`
+
+## 9. License
 
 MediaScribe is licensed under the MIT License. See `../LICENSE`.
 
-## 9. Next Reading
+## 10. Next Reading
 
 - Main README: `../README.md`
 - Chinese quick start: `quickstart.zh-CN.md`

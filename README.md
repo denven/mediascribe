@@ -115,6 +115,8 @@ HF_TOKEN=hf_xxx
 
 # Local summary model via Ollama
 # These are also the built-in defaults.
+# Keep `MEDIASCRIBE_LLM_API_BASE` for local / `ollama/...` models.
+# Cloud models such as `gpt-5-mini` should use their own provider endpoint.
 MEDIASCRIBE_LLM_MODEL=ollama/qwen2.5:3b
 MEDIASCRIBE_LLM_API_BASE=http://localhost:11434
 
@@ -159,11 +161,25 @@ uv run mediascribe-text .\notes --llm-model ollama/qwen2.5:3b --llm-api-base htt
 ```
 
 If you want a cloud model instead, pass `--llm-model` and provide the matching API key in `.env`.
+`MEDIASCRIBE_LLM_API_BASE` is meant for local / custom endpoints such as Ollama and should not be pointed at cloud models like `gpt-5-mini`.
 
 Manual integration check:
 
 ```bash
 uv run python scripts/manual_check_ollama_summary.py
+```
+
+## Verbose Logging
+
+- `-v` enables MediaScribe's own debug logs
+- low-level third-party logs from `openai`, `httpcore`, `httpx`, `urllib3`, and `LiteLLM` stay hidden by default
+- to opt into full third-party debug output for troubleshooting, set `MEDIASCRIBE_DEBUG_THIRD_PARTY=1`
+
+Example:
+
+```powershell
+$env:MEDIASCRIBE_DEBUG_THIRD_PARTY='1'
+uv run mediascribe ".\meeting.wav" --asr azure -l en-US -v
 ```
 
 ## Quick Start

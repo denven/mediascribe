@@ -39,6 +39,7 @@ ollama serve
 ```env
 HF_TOKEN=hf_xxx
 MEDIASCRIBE_LLM_MODEL=ollama/qwen2.5:3b
+# 仅用于本地 / `ollama/...` 总结模型。
 MEDIASCRIBE_LLM_API_BASE=http://localhost:11434
 AZURE_SPEECH_KEY=xxx
 AZURE_SPEECH_REGION=westus2
@@ -49,6 +50,7 @@ AZURE_SPEECH_REGION=westus2
 - MediaScribe 默认使用本地 Ollama 总结模型 `ollama/qwen2.5:3b`
 - 如果你只想输出 transcript，可加 `--no-summary`
 - 如果想改用云端模型，可传 `--llm-model`，并在 `.env` 中填写对应 API key
+- `MEDIASCRIBE_LLM_API_BASE` 适合 Ollama 这类本地 / 自定义端点，不适合 `gpt-5-mini` 这样的云端模型
 
 ## 3. 推荐命令
 
@@ -155,11 +157,16 @@ YTDLP_SITE_COOKIE_MAP=bilibili.com=.\cookies\bilibili_profile12.txt
 uv run mediascribe doctor-video-auth "https://www.bilibili.com/video/BV1VtcYzTEZn/"
 ```
 
-## 8. License
+## 8. Verbose 日志
+
+- `-v` 会显示 MediaScribe 自己的调试日志，不会默认刷出底层第三方 HTTP 调试细节
+- 如果你需要同时查看 `openai` / `httpcore` / `LiteLLM` 的底层日志，可设置 `MEDIASCRIBE_DEBUG_THIRD_PARTY=1`
+
+## 9. License
 
 MediaScribe 使用 MIT License，详见 `../LICENSE`。
 
-## 9. 继续阅读
+## 10. 继续阅读
 
 - 主 README：`../README.md`
 - 英文快速开始：`quickstart.md`
