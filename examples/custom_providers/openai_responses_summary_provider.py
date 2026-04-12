@@ -83,8 +83,11 @@ class OpenAIResponsesSummaryProvider:
 def resolve_openai_responses_runtime(
     *,
     llm_model: str | None = None,
+    llm_api_base: str | None = None,
 ) -> OpenAIResponsesSummaryConfig | None:
     """Route `openai-responses/*` models to this provider."""
+
+    del llm_api_base
 
     if llm_model is None or not llm_model.startswith("openai-responses/"):
         return None

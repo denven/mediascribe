@@ -51,8 +51,14 @@ class MockSummaryProvider:
         )
 
 
-def resolve_mock_summary_runtime(*, llm_model: str | None = None) -> MockSummaryConfig | None:
+def resolve_mock_summary_runtime(
+    *,
+    llm_model: str | None = None,
+    llm_api_base: str | None = None,
+) -> MockSummaryConfig | None:
     """Route matching model names to this provider."""
+
+    del llm_api_base
 
     # Keep the routing check small and explicit so providers do not claim
     # requests that should be handled by other summary backends.
