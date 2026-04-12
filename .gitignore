@@ -1,0 +1,44 @@
+.env
+.env.*
+!.env.example
+
+# Python cache / build
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local test / temp artifacts
+.pytest_tmp*/
+*.tmp
+*.temp
+
+# Tool outputs
+audios/
+output/
+output_*/
+media/
+subtitles/
+transcripts/
+
+# Downloaded auth / media secrets
+cookies/
+*.cookies.txt
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,7 @@
+# Local ASR dependencies (faster-whisper + pyannote)
+# Install on top of core: pip install -r requirements-local.txt
+-r requirements.txt
+faster-whisper>=1.1.0
+pyannote.audio>=3.3.0
+torch>=2.0.0
+torchaudio>=2.0.0

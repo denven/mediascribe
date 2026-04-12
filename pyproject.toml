@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mediascribe"
+version = "0.1.0"
+description = "Transcribe and summarize audio, text, and video with reusable staged workflows."
+requires-python = ">=3.10"
+license = "MIT"
+
+dependencies = [
+    "litellm>=1.50.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+video = [
+    "yt-dlp>=2025.0.0",
+]
+local = [
+    "faster-whisper>=1.1.0",
+    "pyannote.audio>=3.3.0",
+    "torch>=2.0.0",
+    "torchaudio>=2.0.0",
+]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+mediascribe = "mediascribe.cli:main"
+mediascribe-transcriber = "mediascribe.transcription_service:main"
+mediascribe-text = "mediascribe.text_summary_service:main"
+audio-summarizer = "mediascribe.cli:main"
+audio-transcriber = "mediascribe.transcription_service:main"
+text-summarizer = "mediascribe.text_summary_service:main"
+
+[tool.setuptools.packages.find]
+include = ["mediascribe*"]
