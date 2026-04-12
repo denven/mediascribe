@@ -2,10 +2,14 @@
 
 Language: **English** | [Chinese](README.zh-CN.md)
 
+[![Release](https://img.shields.io/github/v/release/denven/mediascribe?display_name=tag)](https://github.com/denven/mediascribe/releases)
+[![CI](https://github.com/denven/mediascribe/actions/workflows/ci.yml/badge.svg)](https://github.com/denven/mediascribe/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![CLI](https://img.shields.io/badge/interface-CLI-2f7d32)
 ![ASR](https://img.shields.io/badge/ASR-local%20%7C%20cloud-0a7ea4)
 ![License](https://img.shields.io/badge/license-MIT-181717?style=flat-square&logo=github)
+
+![MediaScribe social preview](assets/social-preview.png)
 
 MediaScribe is a practical CLI for transcribing and summarizing audio, text, and video with reusable staged workflows.
 

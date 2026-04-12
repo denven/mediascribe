@@ -26,6 +26,7 @@ local = [
 ]
 dev = [
     "pytest>=8.0.0",
+    "ruff>=0.12.0",
 ]
 
 [project.scripts]
@@ -38,3 +39,6 @@ text-summarizer = "mediascribe.text_summary_service:main"
 
 [tool.setuptools.packages.find]
 include = ["mediascribe*"]
+
+[tool.ruff]
+target-version = "py310"

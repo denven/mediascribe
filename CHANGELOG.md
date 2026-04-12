@@ -22,6 +22,8 @@ Initial GitHub-ready MediaScribe release.
 - Azure long-audio auto-splitting for large or long inputs before fast transcription upload
 - Bilingual documentation set covering quick start, architecture, ASR, summary, plugin providers, and benchmark notes
 - Performance reference notes from practical end-to-end runs
+- GitHub Actions CI workflow for `ruff` linting and `pytest` test runs
+- Social preview artwork under `assets/social-preview.png` for repository and release presentation
 
 ### Changed
 
@@ -29,6 +31,7 @@ Initial GitHub-ready MediaScribe release.
 - Runtime hints now explain that local ASR uses more hardware resources
 - Runtime hints now clarify that cloud summary generation may incur LLM API cost
 - README was rewritten for GitHub presentation with clearer workflow guidance and release-oriented docs links
+- README badges now expose GitHub release and CI status
 - `.gitignore` now covers local environments, outputs, caches, cookies, and temp artifacts
 - Added a manual integration-check script for the default local summary path
 

@@ -2,10 +2,14 @@
 
 Language: [English](README.md) | **Chinese**
 
+![Release](https://img.shields.io/github/v/release/denven/mediascribe?display_name=tag)
+![CI](https://github.com/denven/mediascribe/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![CLI](https://img.shields.io/badge/interface-CLI-2f7d32)
 ![ASR](https://img.shields.io/badge/ASR-local%20%7C%20cloud-0a7ea4)
 ![License](https://img.shields.io/badge/license-MIT-181717?style=flat-square&logo=github)
+
+![MediaScribe social preview](assets/social-preview.png)
 
 MediaScribe 是一个面向个人效率场景的实用 CLI，可对音频、文本、视频进行转写与总结，并支持一步完成或分步复用。
 

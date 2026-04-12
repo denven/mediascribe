@@ -24,6 +24,7 @@ env/
 .pytest_tmp*/
 *.tmp
 *.temp
+/summary.md
 
 # Tool outputs
 audios/

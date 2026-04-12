@@ -1,7 +1,6 @@
 """Tests for the local ASR provider alignment logic."""
 
 from mediascribe.asr.local import LocalASRProvider, _RawTranscript, _SpeakerTurn
-from mediascribe.models import TranscribedSegment
 
 
 def test_align_basic() -> None:
