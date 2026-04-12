@@ -377,19 +377,25 @@ examples/
 以下是更偏实战的起步参考，不是严格上限。真实占用会受音频长度、并发数、CPU/GPU 路径以及共享内存情况影响。
 
 ### 本地语音转写
-- `Whisper small`：约 `2 GB VRAM`，CPU-only 建议整机约 `8 GB RAM`；适合先跑通流程
-- `Whisper medium`：约 `5 GB VRAM`，CPU-only 建议整机约 `16 GB RAM`；当前默认值，精度和速度比较平衡
-- `Whisper turbo`：约 `6 GB VRAM`，CPU-only 建议约 `16 GB RAM`；更快，但仍然偏吃资源
-- `Whisper large`：约 `10 GB VRAM`，CPU-only 建议约 `16-32 GB RAM`；效果更强，但本地负载最高
-- 本地 diarization 还会叠加 `pyannote.audio` 的资源占用，所以完整本地 ASR 更适合 `16 GB RAM+`
+| 模型 / 功能 | GPU 路径 | CPU 路径 | 说明 |
+| --- | --- | --- | --- |
+| `Whisper small` | 约 `2 GB VRAM` | 约 `8 GB RAM` | 适合先跑通流程 |
+| `Whisper medium` | 约 `5 GB VRAM` | 约 `16 GB RAM` | 当前默认值，精度和速度比较平衡 |
+| `Whisper turbo` | 约 `6 GB VRAM` | 约 `16 GB RAM` | 更快，但仍然偏吃资源 |
+| `Whisper large` | 约 `10 GB VRAM` | 约 `16-32 GB RAM` | 效果更强，但本地负载最高 |
+| `pyannote.audio` diarization 叠加 | 建议预留更多 GPU 空间 | 更适合 `16 GB RAM+` | 会明显抬高整套本地 ASR 的资源占用 |
 
 ### 本地文本总结
-- `ollama/qwen2.5:3b`：下载约 `1.9 GB`；CPU-only 建议 `6-8 GB RAM`，或 `4-6 GB VRAM`；最适合当前默认中文总结路线
-- `ollama/llama3.2:1b`：下载约 `1.3 GB`；建议 `4-6 GB RAM`，或 `2-3 GB VRAM`；最轻量
-- `ollama/llama3.2:3b`：下载约 `2.0 GB`；建议 `6-8 GB RAM`，或 `4-6 GB VRAM`；通用性更好
-- `ollama/phi4-mini`：下载约 `2.5 GB`；建议 `8 GB RAM`，或 `4-6 GB VRAM`；适合更强调结构化输出的场景
+| 模型 | 下载体积 | CPU 路径 | GPU 路径 | 说明 |
+| --- | --- | --- | --- | --- |
+| `ollama/qwen2.5:3b` | 约 `1.9 GB` | `6-8 GB RAM` | `4-6 GB VRAM` | 最适合当前默认中文总结路线 |
+| `ollama/llama3.2:1b` | 约 `1.3 GB` | `4-6 GB RAM` | `2-3 GB VRAM` | 最轻量 |
+| `ollama/llama3.2:3b` | 约 `2.0 GB` | `6-8 GB RAM` | `4-6 GB VRAM` | 通用性更好 |
+| `ollama/phi4-mini` | 约 `2.5 GB` | `8 GB RAM` | `4-6 GB VRAM` | 适合更强调结构化输出的场景 |
 
 ### 整机建议
-- `8 GB RAM`：优先 `Whisper small` + `llama3.2:1b`，或者直接使用云端 ASR
-- `16 GB RAM`：`Whisper medium` + `qwen2.5:3b` 是最实用的平衡方案
-- `32 GB RAM` 或 `8-12 GB VRAM`：更适合长音频、本地 diarization 和更强的 Whisper 模型
+| 硬件档位 | 建议组合 | 说明 |
+| --- | --- | --- |
+| `8 GB RAM` | `Whisper small` + `llama3.2:1b` | 或者直接使用云端 ASR，减轻本地压力 |
+| `16 GB RAM` | `Whisper medium` + `qwen2.5:3b` | 最实用的平衡方案 |
+| `32 GB RAM` 或 `8-12 GB VRAM` | 更强的 Whisper 变体 + 本地 diarization | 更适合长音频和连续本地运行 |

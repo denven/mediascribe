@@ -377,19 +377,25 @@ See `CHANGELOG.md` for release notes.
 These are practical starting points, not hard limits. Real usage varies with audio length, concurrency, device type, and whether CPU/GPU memory is shared.
 
 ### Local speech transcription
-- `Whisper small`: around `2 GB VRAM`, or roughly `8 GB RAM` for CPU-only runs; good for lower-spec machines
-- `Whisper medium`: around `5 GB VRAM`, or roughly `16 GB RAM` for CPU-only runs; the current default and a solid balance
-- `Whisper turbo`: around `6 GB VRAM`, or roughly `16 GB RAM`; faster, but still fairly heavy
-- `Whisper large`: around `10 GB VRAM`, or roughly `16-32 GB RAM`; best quality, highest cost locally
-- Local diarization with `pyannote.audio` adds extra load, so a full local ASR workflow is more comfortable on `16 GB RAM+`
+| Model / feature | GPU path | CPU path | Notes |
+| --- | --- | --- | --- |
+| `Whisper small` | Around `2 GB VRAM` | Roughly `8 GB RAM` | Good for lower-spec machines |
+| `Whisper medium` | Around `5 GB VRAM` | Roughly `16 GB RAM` | Current default and a solid balance |
+| `Whisper turbo` | Around `6 GB VRAM` | Roughly `16 GB RAM` | Faster, but still fairly heavy |
+| `Whisper large` | Around `10 GB VRAM` | Roughly `16-32 GB RAM` | Best quality, highest local cost |
+| `pyannote.audio` diarization add-on | Extra GPU headroom recommended | More comfortable on `16 GB RAM+` | Adds noticeable load on top of local ASR |
 
 ### Local text summary
-- `ollama/qwen2.5:3b`: download about `1.9 GB`; plan for `6-8 GB RAM` CPU-only or `4-6 GB VRAM`; recommended default for Chinese-friendly summaries
-- `ollama/llama3.2:1b`: download about `1.3 GB`; plan for `4-6 GB RAM` or `2-3 GB VRAM`; smallest practical option
-- `ollama/llama3.2:3b`: download about `2.0 GB`; plan for `6-8 GB RAM` or `4-6 GB VRAM`; good general-purpose fallback
-- `ollama/phi4-mini`: download about `2.5 GB`; plan for `8 GB RAM` or `4-6 GB VRAM`; useful when you want stronger structured output
+| Model | Download size | CPU path | GPU path | Notes |
+| --- | --- | --- | --- | --- |
+| `ollama/qwen2.5:3b` | About `1.9 GB` | `6-8 GB RAM` | `4-6 GB VRAM` | Recommended default for Chinese-friendly summaries |
+| `ollama/llama3.2:1b` | About `1.3 GB` | `4-6 GB RAM` | `2-3 GB VRAM` | Smallest practical option |
+| `ollama/llama3.2:3b` | About `2.0 GB` | `6-8 GB RAM` | `4-6 GB VRAM` | Good general-purpose fallback |
+| `ollama/phi4-mini` | About `2.5 GB` | `8 GB RAM` | `4-6 GB VRAM` | Useful when you want stronger structured output |
 
 ### Whole-machine suggestions
-- `8 GB RAM`: prefer `Whisper small` plus `llama3.2:1b`, or use cloud ASR
-- `16 GB RAM`: `Whisper medium` plus `qwen2.5:3b` is the most practical balanced setup
-- `32 GB RAM` or `8-12 GB VRAM`: comfortable for longer local runs, diarization, and stronger Whisper variants
+| Hardware budget | Suggested setup | Notes |
+| --- | --- | --- |
+| `8 GB RAM` | `Whisper small` + `llama3.2:1b` | Or use cloud ASR to reduce local load |
+| `16 GB RAM` | `Whisper medium` + `qwen2.5:3b` | Most practical balanced setup |
+| `32 GB RAM` or `8-12 GB VRAM` | Stronger Whisper variants plus local diarization | More comfortable for long local runs |
