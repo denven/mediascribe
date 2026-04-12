@@ -49,7 +49,7 @@ def draw_pill(
     text_width = text_box[2] - text_box[0]
     text_height = text_box[3] - text_box[1]
     x = left + (right - left - text_width) / 2
-    y = top + (bottom - top - text_height) / 2 - 2
+    y = top + (bottom - top - text_height) / 2 - text_box[1]
     draw.text((x, y), label, font=font, fill=text_fill)
 
 
@@ -87,8 +87,9 @@ def main() -> None:
     subtitle_font = load_font("segoeui.ttf", 27)
     pill_font = load_font("segoeui.ttf", 22)
     section_font = load_font("segoeuib.ttf", 23)
-    body_font = load_font("segoeui.ttf", 20)
-    tiny_font = load_font("segoeui.ttf", 18)
+    body_font = load_font("segoeui.ttf", 19)
+    tiny_font = load_font("segoeui.ttf", 17)
+    transcript_font = load_font("segoeui.ttf", 15)
 
     # Left copy block.
     draw.text((84, 86), "AI media workflows", font=eyebrow_font, fill=(129, 232, 223))
@@ -113,7 +114,7 @@ def main() -> None:
     )
     draw.text(
         (88, 372),
-        "and local Ollama or cloud backends.",
+        "and local Ollama or cloud LLM backends.",
         font=body_font,
         fill=(171, 211, 219),
     )
@@ -156,20 +157,23 @@ def main() -> None:
     # Right social-card panel.
     card_shadow = Image.new("RGBA", SIZE, (0, 0, 0, 0))
     shadow_draw = ImageDraw.Draw(card_shadow)
-    shadow_draw.rounded_rectangle((732, 70, 1216, 582), radius=34, fill=(0, 0, 0, 122))
+    shadow_draw.rounded_rectangle((732, 70, 1216, 596), radius=34, fill=(0, 0, 0, 122))
     base.alpha_composite(card_shadow.filter(ImageFilter.GaussianBlur(28)))
 
     panel = Image.new("RGBA", SIZE, (0, 0, 0, 0))
     panel_draw = ImageDraw.Draw(panel)
-    panel_draw.rounded_rectangle((748, 56, 1220, 568), radius=34, fill=(239, 246, 247, 236))
-    panel_draw.rounded_rectangle((772, 84, 1196, 190), radius=24, fill=(224, 245, 241))
-    panel_draw.rounded_rectangle((772, 206, 1196, 366), radius=24, fill=(13, 92, 108))
-    panel_draw.rounded_rectangle((772, 382, 1196, 540), radius=24, fill=(245, 250, 249))
+    panel_draw.rounded_rectangle((748, 56, 1220, 582), radius=34, fill=(239, 246, 247, 236))
+    panel_draw.rounded_rectangle((772, 84, 1196, 196), radius=24, fill=(224, 245, 241))
+    panel_draw.rounded_rectangle((772, 206, 1196, 392), radius=24, fill=(13, 92, 108))
+    panel_draw.rounded_rectangle((772, 408, 1196, 554), radius=24, fill=(245, 250, 249))
 
-    panel_draw.text((800, 116), "Inputs", font=section_font, fill=(22, 53, 61))
+    inputs_title = "Inputs"
+    inputs_box = panel_draw.textbbox((0, 0), inputs_title, font=section_font)
+    inputs_x = 772 + ((1196 - 772) - (inputs_box[2] - inputs_box[0])) / 2
+    panel_draw.text((inputs_x, 100), inputs_title, font=section_font, fill=(22, 53, 61))
     draw_pill(
         panel_draw,
-        (800, 138, 914, 176),
+        (804, 146, 920, 186),
         "audio",
         tiny_font,
         fill=(255, 255, 255, 210),
@@ -178,7 +182,7 @@ def main() -> None:
     )
     draw_pill(
         panel_draw,
-        (932, 138, 1048, 176),
+        (938, 146, 1056, 186),
         "video",
         tiny_font,
         fill=(255, 255, 255, 210),
@@ -187,7 +191,7 @@ def main() -> None:
     )
     draw_pill(
         panel_draw,
-        (1066, 138, 1176, 176),
+        (1074, 146, 1184, 186),
         "text",
         tiny_font,
         fill=(255, 255, 255, 210),
@@ -195,22 +199,21 @@ def main() -> None:
         text_fill=(33, 74, 85),
     )
 
-    panel_draw.text((800, 236), "Transcript + subtitles", font=section_font, fill=(235, 248, 249))
-    panel_draw.text((800, 280), "[00:00:12] Speaker 1", font=tiny_font, fill=(167, 230, 237))
-    panel_draw.rounded_rectangle((812, 304, 960, 342), radius=16, fill=(33, 133, 148))
-    panel_draw.text((838, 312), "subtitle-first", font=tiny_font, fill=(233, 248, 250))
-    panel_draw.rounded_rectangle((1036, 304, 1168, 342), radius=16, fill=(247, 187, 92))
-    panel_draw.text((1072, 312), "ASR", font=tiny_font, fill=(34, 46, 53))
-    panel_draw.line((800, 346, 1156, 346), fill=(149, 216, 223), width=7)
-    panel_draw.line((800, 366, 1104, 366), fill=(102, 191, 203), width=7)
+    panel_draw.text((800, 226), "Transcript + subtitles", font=section_font, fill=(235, 248, 249))
+    panel_draw.text((800, 272), "[00:00:12] Alice: Opening the clip", font=transcript_font, fill=(186, 234, 240))
+    panel_draw.text((800, 300), "[00:00:15] Justin: Key point lands here", font=transcript_font, fill=(186, 234, 240))
+    panel_draw.rounded_rectangle((812, 336, 970, 374), radius=16, fill=(33, 133, 148))
+    panel_draw.text((839, 344), "subtitle-first", font=tiny_font, fill=(233, 248, 250))
+    panel_draw.rounded_rectangle((1030, 336, 1168, 374), radius=16, fill=(247, 187, 92))
+    panel_draw.text((1072, 344), "ASR", font=tiny_font, fill=(34, 46, 53))
 
-    panel_draw.text((800, 408), "Summary", font=section_font, fill=(22, 53, 61))
-    panel_draw.text((800, 446), "- Provider-based ASR + summaries", font=body_font, fill=(53, 83, 90))
-    panel_draw.text((800, 478), "- Local Ollama or cloud LLMs", font=body_font, fill=(53, 83, 90))
-    panel_draw.text((800, 510), "- Reusable CLI media workflows", font=body_font, fill=(53, 83, 90))
+    panel_draw.text((800, 426), "Summary", font=section_font, fill=(22, 53, 61))
+    panel_draw.text((800, 462), "- Provider-based ASR + summaries", font=transcript_font, fill=(53, 83, 90))
+    panel_draw.text((800, 492), "- Local Ollama or cloud LLMs", font=transcript_font, fill=(53, 83, 90))
+    panel_draw.text((800, 522), "- Reusable CLI media workflows", font=transcript_font, fill=(53, 83, 90))
     draw_pill(
         panel_draw,
-        (1018, 392, 1130, 430),
+        (970, 420, 1088, 458),
         "Whisper",
         tiny_font,
         fill=(18, 105, 119, 220),
@@ -219,8 +222,8 @@ def main() -> None:
     )
     draw_pill(
         panel_draw,
-        (1142, 392, 1184, 430),
-        "O",
+        (1100, 420, 1184, 458),
+        "Ollama",
         tiny_font,
         fill=(245, 190, 96, 240),
         outline=(245, 190, 96, 0),
