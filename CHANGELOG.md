@@ -4,6 +4,27 @@ All notable changes to MediaScribe are documented in this file.
 
 The project follows a simple Keep a Changelog-style structure for human-readable release notes.
 
+## [0.1.1] - 2026-04-16
+
+Patch release focused on reliability, logging clarity, and provider configuration fixes after the initial GitHub release.
+
+### Added
+
+- Runtime log filtering tests covering LiteLLM noise suppression and third-party debug toggle behavior
+- Summary pipeline debug markers that make it easier to tell when the LLM call starts, returns, and writes the output file
+- Additional summary runtime tests that protect local-vs-cloud API base selection behavior
+
+### Changed
+
+- Azure locale UX now consistently points users to full BCP-47 locales such as `zh-CN` and `en-US`
+- Azure invalid-locale failures now surface a clearer remediation hint with the official Azure Speech language support reference
+- Verbose mode now focuses on MediaScribe debug logs while keeping raw `openai` / `httpcore` / `LiteLLM` traces hidden by default
+- Added opt-in `MEDIASCRIBE_DEBUG_THIRD_PARTY=1` support for low-level provider debugging when needed
+- `MEDIASCRIBE_LLM_API_BASE` now auto-applies only to local `ollama/...` models instead of leaking into cloud models like `gpt-5-mini`
+- README and quick-start docs now explain Azure locale requirements, local-vs-cloud summary endpoint behavior, and the new verbose logging behavior
+- CI setup was refined after `v0.1.0`, including workflow fixes and explicit `ffmpeg` installation
+- Social preview artwork and repo presentation details were polished
+
 ## [0.1.0] - 2026-04-12
 
 Initial GitHub-ready MediaScribe release.
